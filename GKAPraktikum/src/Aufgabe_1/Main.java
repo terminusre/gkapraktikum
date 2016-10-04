@@ -8,33 +8,92 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.graphstream.graph.Graph;
+import org.graphstream.graph.implementations.SingleGraph;
 
 public class Main {
 
 	public static void main(String[] args) {
-		Charset charset = Charset.forName("US-ASCII");
-		Path file = Paths.get(new File("Graphs/graph01.gka").getAbsolutePath());
-		
-		String s = "Hellomjm File!";
-	
+		Graph graph = importGraph(Paths.get(new File("Graphs/graph01.gka").getAbsolutePath()), "graph01");
+		graph.display();
+	}
 
-		// try (BufferedWriter writer = Files.newBufferedWriter(file, charset))
-		// {
-		// writer.write(s, 0, s.length());
-		// } catch (IOException x) {
-		// System.err.format("IOException: %s%n", x);
-		// }
-		
-		
-		try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
-		    String line = null;
-		    while ((line = reader.readLine()) != null) {
-		        System.out.println(line);
-		    }
+	private static Graph importGraph(Path path, String graphId) {
+		Graph graph = new SingleGraph(graphId);
+		List<String> lines = new LinkedList<String>();
+
+		// read Data
+		Charset charset = Charset.forName("US-ASCII");
+		try (BufferedReader reader = Files.newBufferedReader(path, charset)) {
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				lines.add(line);
+			}
 		} catch (IOException x) {
-		    System.err.format("IOException: %s%n", x);
+			System.err.format("IOException: %s%n", x);
 		}
 
+		// retrieve nodes and edges from file
+		Iterator<String> it = lines.iterator();
+		Set<String> nodes = new HashSet<String>();
+		Set<String> edges = new HashSet<String>();
+		Matcher matcher = null;
+		String node1;
+		String node2;
+		while (it.hasNext()) {
+			matcher = Pattern.compile("(\\w) -> (\\w);").matcher(it.next());
+			if (matcher.matches()) {
+				node1 = matcher.group(1);
+				node2 = matcher.group(2);
+
+				// put nodes into Graph
+				if (graph.hasArray(node1))
+					graph.addNode(node1);
+				if (graph.hasArray(node2))
+					graph.addNode(node2);
+				
+				
+			} else
+				System.out.println(matcher.toString());
+		}
+
+
+
+		// put edges into Graph
+		// for (String edge : edges)
+		// graph.addEdge("", "", "");
+
+		return graph;
+	}
+
+	public void testio() {
+		Charset charset = Charset.forName("US-ASCII");
+		Path file = Paths.get(new File("text.txt").getAbsolutePath());
+
+		String s = "Hellomjm File!";
+
+		try (BufferedWriter writer = Files.newBufferedWriter(file, charset)) {
+			writer.write(s, 0, s.length());
+		} catch (IOException x) {
+			System.err.format("IOException: %s%n", x);
+		}
+
+		try (BufferedReader reader = Files.newBufferedReader(file, charset)) {
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				System.out.println(line);
+			}
+		} catch (IOException x) {
+			System.err.format("IOException: %s%n", x);
+		}
 	}
 
 }
