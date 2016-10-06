@@ -8,7 +8,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
+import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
 public class Main {
@@ -26,6 +27,17 @@ public class Main {
 	public static void main(String[] args) {
 		Graph graph = importGraph(Paths.get(new File("Graphs/graph01.gka").getAbsolutePath()), "graph01");
 		graph.display();
+		breadthFirstSearch(graph);
+	}
+
+	private static void breadthFirstSearch(Graph graph) {
+		LinkedList queue = new LinkedList();
+		Collection<Node> nodes = graph.getNodeSet();
+		for (Node node : nodes) {
+			node.addAttribute("distance", -1);
+			node.addAttribute("parent", null);
+			System.out.println(node);
+		}
 	}
 
 	private static Graph importGraph(Path path, String graphId) {
