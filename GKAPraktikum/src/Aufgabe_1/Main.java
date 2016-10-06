@@ -8,6 +8,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -48,24 +49,27 @@ public class Main {
 		Matcher matcher = null;
 		String node1;
 		String node2;
+
 		while (it.hasNext()) {
 			matcher = Pattern.compile("(\\w) -> (\\w);").matcher(it.next());
 			if (matcher.matches()) {
-				node1 = matcher.group(1);
-				node2 = matcher.group(2);
-
-				// put nodes into Graph
-				if (graph.hasArray(node1))
-					graph.addNode(node1);
-				if (graph.hasArray(node2))
-					graph.addNode(node2);
-				
-				
+				if (!nodes.contains(matcher.group(1))) {
+					nodes.add(matcher.group(1));
+					System.out.println(matcher.group(1));
+					graph.addNode(matcher.group(1));
+				}
+				if (!nodes.contains(matcher.group(2))) {
+					nodes.add(matcher.group(2));
+					System.out.println(matcher.group(2));
+					graph.addNode(matcher.group(2));
+				}
+				graph.addEdge(matcher.group(1) + matcher.group(2), matcher.group(1), matcher.group(2));
 			} else
 				System.out.println(matcher.toString());
 		}
 
-
+		// for (String node : nodes)
+		// graph.addNode(node);
 
 		// put edges into Graph
 		// for (String edge : edges)
