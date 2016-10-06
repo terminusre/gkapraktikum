@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.SingleGraph;
 
@@ -49,21 +50,23 @@ public class Main {
 		Matcher matcher = null;
 		String node1;
 		String node2;
+		Edge edge;
 
 		while (it.hasNext()) {
 			matcher = Pattern.compile("(\\w) -> (\\w);").matcher(it.next());
 			if (matcher.matches()) {
 				if (!nodes.contains(matcher.group(1))) {
 					nodes.add(matcher.group(1));
-					System.out.println(matcher.group(1));
+					// System.out.println(matcher.group(1));
 					graph.addNode(matcher.group(1));
 				}
 				if (!nodes.contains(matcher.group(2))) {
 					nodes.add(matcher.group(2));
-					System.out.println(matcher.group(2));
+					// System.out.println(matcher.group(2));
 					graph.addNode(matcher.group(2));
 				}
-				graph.addEdge(matcher.group(1) + matcher.group(2), matcher.group(1), matcher.group(2));
+				edge = graph.addEdge(matcher.group(1) + matcher.group(2), matcher.group(1), matcher.group(2), true);
+				edge.setAttribute(matcher.group(1) + matcher.group(2), 1);
 			} else
 				System.out.println(matcher.toString());
 		}
