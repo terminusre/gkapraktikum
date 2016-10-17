@@ -17,10 +17,12 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.graphstream.graph.Edge;
-import org.graphstream.graph.Graph;
-import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.SingleGraph;
+import org.jgrapht.Graph;
+
+//import org.graphstream.graph.Edge;
+//import org.graphstream.graph.Graph;
+//import org.graphstream.graph.Node;
+//import org.graphstream.graph.implementations.SingleGraph;
 
 public class Main {
 
